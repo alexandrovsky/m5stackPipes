@@ -25,12 +25,11 @@ struct Pipe{
 
   Pipe(){}
 
-  Pipe(eConnectionType conns, ...){
-    va_list lArg;
-    va_start(lArg, conns);
-    while(conns != -1){
-      connections[conns] = true;
-    }
+  Pipe(bool north, bool east, bool south, bool west){
+    connections[eConnectionType::North] = north;
+    connections[eConnectionType::East] = east;
+    connections[eConnectionType::South] = south;
+    connections[eConnectionType::West] = west;
   }
   
   inline void RotateLeft(){
@@ -47,12 +46,12 @@ struct Pipe{
 
 
   static Pipe PipeT(){
-    Pipe p = Pipe(eConnectionType::East, eConnectionType::North, eConnectionType::West);
+    Pipe p = Pipe(true, true, false, true);
     return p;
   }
 
   static Pipe PipeI(){
-    Pipe p = Pipe(eConnectionType::East, eConnectionType::West);
+    Pipe p = Pipe(false, true, false, true);
     return p;
   }
   

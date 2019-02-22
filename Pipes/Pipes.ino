@@ -24,6 +24,12 @@ void setup()
   Serial.begin(115200);
   IMU.calibrateMPU9250(IMU.gyroBias, IMU.accelBias);
   IMU.initMPU9250();
+
+  Coordinate2D coord;
+  coord.x=1;
+  coord.y=1;
+
+  gameField.setPipe(Pipe::PipeT(), coord);
 }
 
 void loop() 
