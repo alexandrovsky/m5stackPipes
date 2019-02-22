@@ -16,7 +16,7 @@ void setup()
 {
   M5.begin();
   Wire.begin();
-
+  Serial.begin(115200);
   IMU.calibrateMPU9250(IMU.gyroBias, IMU.accelBias);
   IMU.initMPU9250();
 
@@ -25,6 +25,7 @@ void setup()
 
 void loop() 
 {
+  Serial.println("test");
   if (IMU.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01) 
   {  
     IMU.readGyroData(IMU.gyroCount);  // Read the x/y/z adc values
