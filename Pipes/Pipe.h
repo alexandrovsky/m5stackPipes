@@ -18,9 +18,20 @@ struct Coordinate2D {
 struct Pipe{
 
   public:
-  unsigned int id = -1;
+  Coordinate2D pos;
   bool visited = false;
   bool connections[NUM_CON] = {0};
+
+  Pipe(){}
+
+  Pipe(eConnectionType conns, ...){
+    va_list lArg;
+    va_start(lArg, conns);
+    while(conns != -1){
+      connections[conns] = true;
+    }
+  }
+  
   inline void RotateLeft(){
     for(int i = 0; i < NUM_CON; i++){
       connections[(i-1)%NUM_CON] = connections[i];
@@ -32,6 +43,18 @@ struct Pipe{
       connections[i] = connections[(i-1)%NUM_CON];
     }
   }
+
+
+  static Pipe PipeT(){
+    Pipe p = Pipe(eConnectionType::East, eConnectionType::North, eConnectionType::West);
+    return p;
+  }
+
+  static Pipe PipeI(){
+    Pipe p = Pipe(eConnectionType::East, eConnectionType::West);
+    return p;
+  }
+  
 };
 
 
@@ -40,14 +63,17 @@ public:
   Coordinate2D start;
   Coordinate2D goal;
 
-
-  Pipe grid [GRID_WIDTH][GRID_HEIGHT];
   
 
-  PipesGameField()
-  {
+  Pipe grid [GRID_WIDTH][GRID_HEIGHT];
+
+  PipesGameField(){}
+
+  void setPipe(Pipe pipe, Coordinate2D coord){
+    grid[coord.x][coord.y] = pipe;
+  }  
+
     
-  }
   
 };
 
