@@ -8,6 +8,13 @@ enum eConnectionType {
   West = 3
 }
 
+struct Coordinate2D {
+  unsigned int x;
+  unsigned int y;
+  
+}
+
+
 struct Pipe{
  unsigned int id = -1;
  bool visited = false;
@@ -25,11 +32,14 @@ struct Pipe{
       connections[i] = connections[(i-1)%NUM_CON];
     }
   }
- 
 };
 
 
 public class PipesGameFiled {
+
+  Coordinate2D start;
+  Coordinate2D goal;
+
 
   Pipe[][] grid;
   unsigned int width;
