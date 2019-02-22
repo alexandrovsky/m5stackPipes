@@ -1,5 +1,6 @@
 #include <M5Stack.h>
 #include "utility/MPU9250.h"
+#include "Pipe.h"
 
 MPU9250 IMU;
 int xRot, yRot, zRot;
@@ -10,7 +11,7 @@ int HEIGHT = 5;
 int SCREEN_WIDTH = 320;
 int SCREEN_HEIGHT = 240;
 
-//Pipe grid[WIDTH, HEIGHT];
+PipesGameFiled gameField;
 
 void setup()
 {
@@ -19,6 +20,8 @@ void setup()
 
   IMU.calibrateMPU9250(IMU.gyroBias, IMU.accelBias);
   IMU.initMPU9250();
+
+  gameField = new GameFiled(WIDTH, HEIGHT);
 }
 
 void loop() 
@@ -86,15 +89,17 @@ void draw()
   
   for(int x=0; x <= WIDTH; x++) 
   {
-    int tempX = (int) (x*(float)(SCREEN_WIDTH)/WIDTH);
-    M5.Lcd.setCursor(x*50, 50); M5.Lcd.print(tempX, RED);
+    int tempX = (int) (x*(float)(SCREEN_WIDTH)/gameField.width);
     M5.Lcd.drawLine(tempX, 0, tempX, SCREEN_HEIGHT, RED);
   }
 
   for(int y=0; y <= HEIGHT; y++) 
   {
-    int tempY = (int) (y*(float)(SCREEN_HEIGHT)/HEIGHT);
+    int tempY = (int) (y*(float)(SCREEN_HEIGHT)/gameField.height);
     M5.Lcd.drawLine(0, tempY, SCREEN_WIDTH, tempY, RED);
   }
- 
+}
+
+void drawPipe(int x, int y) {
+  
 }
