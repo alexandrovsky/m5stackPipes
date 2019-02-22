@@ -1,9 +1,16 @@
 #include <M5Stack.h>
 #include "utility/MPU9250.h"
+#include "Pipe.h"
 
 MPU9250 IMU;
 int xRot, yRot, zRot;
 long oldTime, curTime;
+
+
+int SCREEN_WIDTH = 320;
+int SCREEN_HEIGHT = 240;
+
+PipesGameField gameField;
 
 void setup()
 {
@@ -12,6 +19,8 @@ void setup()
 
   IMU.calibrateMPU9250(IMU.gyroBias, IMU.accelBias);
   IMU.initMPU9250();
+
+  
 }
 
 void loop() 
@@ -42,7 +51,7 @@ void loop()
     }
     else if(xRot >= 360) 
     {
-      xRot = 360;
+      xRot %= 360;
     }
 
     if (yRot < 0) 
@@ -67,20 +76,29 @@ void loop()
     int y=128+20;
     int z=192+30;
     
-    M5.Lcd.fillScreen(BLACK);
-    M5.Lcd.setTextColor(GREEN , BLACK);
-    M5.Lcd.setTextSize(2);
-
-    M5.Lcd.setCursor(0, 0); M5.Lcd.print(timeDif);
-
-    M5.Lcd.setCursor(0, 64); M5.Lcd.print((int)(IMU.gx));
-    M5.Lcd.setCursor(x, 64); M5.Lcd.print((int)(IMU.gy));
-    M5.Lcd.setCursor(y, 64); M5.Lcd.print((int)(IMU.gz));
-    M5.Lcd.setCursor(z, 64); M5.Lcd.print("o/s");
-
-    M5.Lcd.setCursor(0, 64 * 2); M5.Lcd.print(xRot);
-    M5.Lcd.setCursor(x, 64 * 2); M5.Lcd.print(yRot);
-    M5.Lcd.setCursor(y, 64 * 2); M5.Lcd.print(zRot);
-    M5.Lcd.setCursor(z, 64 * 2); M5.Lcd.print("o/s");
+    draw();
   }
+}
+
+void draw()
+{
+  M5.Lcd.fillScreen(BLACK);
+  M5.Lcd.setTextColor(GREEN , BLACK);
+  M5.Lcd.setTextSize(2);
+  
+  for(int x=0; x <= GRID_WIDTH; x++) 
+  {
+    int tempX = (int) (x*(float)(SCREEN_WIDTH)/GRID_WIDTH);
+    M5.Lcd.drawLine(tempX, 0, tempX, SCREEN_HEIGHT, RED);
+  }
+
+  for(int y=0; y <= GRID_HEIGHT; y++) 
+  {
+    int tempY = (int) (y*(float)(SCREEN_HEIGHT)/GRID_HEIGHT);
+    M5.Lcd.drawLine(0, tempY, SCREEN_WIDTH, tempY, RED);
+  }
+}
+
+void drawPipe(int x, int y) {
+  
 }
