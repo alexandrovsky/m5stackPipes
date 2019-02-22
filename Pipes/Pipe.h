@@ -68,6 +68,11 @@ public:
 
   Pipe grid [GRID_WIDTH][GRID_HEIGHT];
 
+  Pipe getPipe(int x, int y) {
+
+    return grid[x][y];
+  }
+  
   PipesGameField(){}
 
   void setPipe(Pipe pipe, Coordinate2D coord){
@@ -133,8 +138,5 @@ public:
     }
     return reachedGoal;
   }
-
-    
   
 };
-
