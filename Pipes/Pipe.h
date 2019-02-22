@@ -50,8 +50,27 @@ struct Pipe{
     return p;
   }
 
-  static Pipe PipeI(){
+  static Pipe PipeCross(){
+    Pipe p = Pipe(true, true, true, true);
+    return p;
+  }
+
+  static Pipe PipeHorizontal(){
     Pipe p = Pipe(false, true, false, true);
+    return p;
+  }
+
+  static Pipe PipeVertical(){
+    Pipe p = Pipe(true, false, true, false);
+    return p;
+  }
+
+  static Pipe PipeLeftL(){
+    Pipe p = Pipe(true, true, false, false);
+    return p;
+  }
+  static Pipe PipeRightL(){
+    Pipe p = Pipe(true, false, false, true);
     return p;
   }
   
@@ -79,6 +98,10 @@ public:
     pipe.isSet = true;
     grid[coord.x][coord.y] = pipe;
   }  
+
+  bool traversePipes(){
+    return traversePipes(start);
+  }
 
   bool traversePipes(Coordinate2D pos){
     bool reachedGoal = false;

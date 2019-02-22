@@ -29,7 +29,7 @@ void setup()
   coord.x=1;
   coord.y=1;
 
-  gameField.setPipe(Pipe::PipeT(), coord);
+  gameField.setPipe(Pipe::PipeCross(), coord);
 }
 
 void loop() 
@@ -156,32 +156,32 @@ void drawConnection(int x, int y, Pipe p) {
 
 void drawNorth(int x, int y) {
   
-  int xCoord = (int) (x*WIDTH_UNIT - PIPE_WIDTH);
-  int yCoord = (int) (y*HEIGHT_UNIT - PIPE_WIDTH);
+  int xCoord = (int) (x*WIDTH_UNIT + (WIDTH_UNIT - PIPE_WIDTH)/2);
+  int yCoord = (int) (y*HEIGHT_UNIT);
 
-  M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, WIDTH_UNIT/2, GREEN);
+  M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, HEIGHT_UNIT/2, GREEN);
 }
 
 void drawEast(int x, int y) {
   
-  int xCoord = (int) ((x+1)*WIDTH_UNIT - PIPE_WIDTH);
-  int yCoord = (int) (y*HEIGHT_UNIT - PIPE_WIDTH);
+  int xCoord = (int) ((x)*WIDTH_UNIT + WIDTH_UNIT/2);
+  int yCoord = (int) (y*HEIGHT_UNIT + (HEIGHT_UNIT - PIPE_WIDTH)/2);
 
   M5.Lcd.fillRect(xCoord, yCoord, WIDTH_UNIT/2, PIPE_WIDTH, GREEN);
 }
 
 void drawSouth(int x, int y) {
   
-  int xCoord = (int) (x*WIDTH_UNIT - PIPE_WIDTH);
-  int yCoord = (int) ((y+1)*HEIGHT_UNIT - PIPE_WIDTH);
+  int xCoord = (int) (x*WIDTH_UNIT + (WIDTH_UNIT - PIPE_WIDTH)/2);
+  int yCoord = (int) (y*HEIGHT_UNIT) + HEIGHT_UNIT/2;
 
-  M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, -WIDTH_UNIT/2, GREEN);
+  M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, HEIGHT_UNIT/2, GREEN);
 }
 
 void drawWest(int x, int y) {
   
-  int xCoord = (int) (x*WIDTH_UNIT - PIPE_WIDTH);
-  int yCoord = (int) (y*HEIGHT_UNIT - PIPE_WIDTH);
+  int xCoord = (int) (x*WIDTH_UNIT);
+  int yCoord = (int) (y*HEIGHT_UNIT + (HEIGHT_UNIT - PIPE_WIDTH)/2);
 
   M5.Lcd.fillRect(xCoord, yCoord, WIDTH_UNIT/2, PIPE_WIDTH, GREEN);
 }
