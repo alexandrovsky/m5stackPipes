@@ -19,6 +19,7 @@ struct Pipe{
 
   public:
   Coordinate2D pos;
+  bool isSet;
   bool visited = false;
   bool connections[NUM_CON] = {0};
 
@@ -70,8 +71,68 @@ public:
   PipesGameField(){}
 
   void setPipe(Pipe pipe, Coordinate2D coord){
+    pipe.pos = coord;
+    pipe.isSet = true;
     grid[coord.x][coord.y] = pipe;
   }  
+
+  bool traversePipes(Coordinate2D pos){
+    bool reachedGoal = false;
+    grid[pos.x][pos.y].visited = true;
+    if(grid[pos.x][pos.y].isSet){
+      if(pos.x == goal.x && pos.y == goal.y){
+        reachedGoal = true;
+      }else{
+        // traverse north:
+        bool north,east,south,west = false;
+        if(pos.y -1 >= 0){ // we can go north
+          if(grid[pos.x][pos.y-1].isSet){ // there is a pipe
+            if(grid[pos.x][pos.y-1].connections[eConnectionType::South]){ // the other pipe has a corresponding connection
+              Coordinate2D newPos;
+              newPos.x = pos.x;
+              newPos.y = pos.y-1;
+              north = traversePipes(newPos);
+            }
+          }
+        }
+
+        if(pos.y +1 < GRID_HEIGHT){ // we can go south
+          if(grid[pos.x][pos.y+1].isSet){ // there is a pipe
+            if(grid[pos.x][pos.y-1].connections[eConnectionType::North]){ // the other pipe has a corresponding connection
+              Coordinate2D newPos;
+              newPos.x = pos.x;
+              newPos.y = pos.y+1;
+              south = traversePipes(newPos);
+            }
+          }
+        }
+
+        if(pos.x+1 < GRID_WIDTH){ // we can go east
+          if(grid[pos.x+1][pos.y].isSet){ // there is a pipe
+            if(grid[pos.x][pos.y-1].connections[eConnectionType::West]){ // the other pipe has a corresponding connection
+              Coordinate2D newPos;
+              newPos.x = pos.x+1;
+              newPos.y = pos.y;
+              east = traversePipes(newPos);
+            }
+          }
+        }
+
+        if(pos.x-1 >= 0){ // we can go west
+          if(grid[pos.x-1][pos.y].isSet){ // there is a pipe
+            if(grid[pos.x][pos.y-1].connections[eConnectionType::East]){ // the other pipe has a corresponding connection
+              Coordinate2D newPos;
+              newPos.x = pos.x-1;
+              newPos.y = pos.y;
+              west = traversePipes(newPos);
+            }
+          }
+        }
+        reachedGoal = north || east || south || west;
+      }
+    }
+    return reachedGoal;
+  }
 
     
   
