@@ -1,4 +1,4 @@
-g#include <M5Stack.h>
+#include <M5Stack.h>
 #include "utility/MPU9250.h"
 #include "Pipe.h"
 
@@ -125,6 +125,13 @@ void loop()
     draw();
     lastDrawTime = t;
   }
+  drawTime();
+}
+
+void drawTime() {
+
+  M5.Lcd.setCursor(240, 10); M5.Lcd.print("TIME");
+  M5.Lcd.setCursor(240, 30); M5.Lcd.print(millis() - startTime);
 }
 
 void draw()
@@ -153,9 +160,6 @@ void draw()
       drawPipe(x, y);
     }
   }
-
-  M5.Lcd.setCursor(240, 10); M5.Lcd.print("TIME");
-  M5.Lcd.setCursor(240, 30); M5.Lcd.print(millis() - startTime);
 }
 
 void drawStart() {
@@ -173,7 +177,7 @@ void drawGoal() {
   int tempX = (int) (coord.x*(float)(BORDER_LENGTH)/GRID_WIDTH) + X_OFFSET;
   int tempY = (int) (coord.y*(float)(BORDER_LENGTH)/GRID_HEIGHT) + Y_OFFSET;
 
-  M5.Lcd.fillRect(tempX, tempY, WIDTH_UNIT, HEIGHT_UNIT, YELLOW);
+  M5.Lcd.fillRect(tempX, tempY, WIDTH_UNIT, HEIGHT_UNIT, CYAN);
 }
 
 void drawPipe(int x, int y) {
