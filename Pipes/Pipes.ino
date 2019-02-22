@@ -131,16 +131,16 @@ void drawConnection(int x, int y, Pipe p) {
   for(int dir=0; dir < NUM_CON; dir++) {
     if(p.connections[dir]) {
       switch(dir) {
-        case 0:
+        case eConnectionType::North:
           drawNorth(x,y);
           break;
-        case 1:
+        case eConnectionType::East:
           drawEast(x,y);
           break;
-        case 2:
+        case eConnectionType::West:
           drawWest(x,y);
           break;
-        case 3:
+        case eConnectionType::South:
           drawSouth(x,y);
           break;
       }
