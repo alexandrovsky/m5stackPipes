@@ -5,7 +5,7 @@
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
 #define BORDER_LENGTH 220
-#define X_OFFSET 50
+#define X_OFFSET 10
 #define Y_OFFSET 10
 #define RADIUS 5
 #define PIPE_WIDTH 10
@@ -16,23 +16,26 @@
 
 MPU9250 IMU;
 int xRot, yRot, zRot;
-long oldTime, curTime;
+long oldTime, curTime, startTime;
 
-PipesGameField gameField;
+Coordinate2D start(0,0);
+
+Coordinate2D goal(3,3);
+
+PipesGameField gameField(start, goal);
 
 void setup()
-{
+{  
   M5.begin();
   Wire.begin();
   Serial.begin(115200);
   IMU.calibrateMPU9250(IMU.gyroBias, IMU.accelBias);
   IMU.initMPU9250();
 
-  Coordinate2D coord;
-  coord.x=1;
-  coord.y=1;
+  Coordinate2D coord(1,1);
 
-  gameField.setPipe(Pipe::PipeT(), coord);
+  gameField.setPipe(Pipe::PipeCross(), coord);
+  startTime = millis();
 }
 
 void loop() 
@@ -102,13 +105,13 @@ void draw()
   for(int x=0; x <= GRID_WIDTH; x++) 
   {
     int tempX = (int) (x*(float)(BORDER_LENGTH)/GRID_WIDTH) + X_OFFSET;
-    M5.Lcd.drawLine(tempX, Y_OFFSET, tempX, SCREEN_HEIGHT - Y_OFFSET, RED);
+    M5.Lcd.drawLine(tempX, Y_OFFSET, tempX, SCREEN_HEIGHT - (SCREEN_HEIGHT - BORDER_LENGTH) + Y_OFFSET, RED);
   }
 
   for(int y=0; y <= GRID_HEIGHT; y++) 
   {
     int tempY = (int) (y*(float)(BORDER_LENGTH)/GRID_HEIGHT) + Y_OFFSET;
-    M5.Lcd.drawLine(X_OFFSET, tempY, SCREEN_WIDTH - X_OFFSET, tempY, RED);
+    M5.Lcd.drawLine(X_OFFSET, tempY, SCREEN_WIDTH - (SCREEN_WIDTH - BORDER_LENGTH) + X_OFFSET, tempY, RED);
   }
 
   drawStart();
@@ -119,6 +122,9 @@ void draw()
       drawPipe(x, y);
     }
   }
+
+  M5.Lcd.setCursor(240, 10); M5.Lcd.print("TIME");
+  M5.Lcd.setCursor(240, 30); M5.Lcd.print(millis() - startTime);
 }
 
 void drawStart() {
@@ -180,32 +186,32 @@ void drawConnection(int x, int y, Pipe p) {
 
 void drawNorth(int x, int y) {
   
-  int xCoord = (int) (x*WIDTH_UNIT + WIDTH_UNIT/2 - PIPE_WIDTH) + X_OFFSET;
-  int yCoord = (int) (y*HEIGHT_UNIT + HEIGHT_UNIT/2 - PIPE_WIDTH) + Y_OFFSET;
+  int xCoord = (int) (x*WIDTH_UNIT + (WIDTH_UNIT - PIPE_WIDTH)/2) + X_OFFSET;
+  int yCoord = (int) (y*HEIGHT_UNIT) + Y_OFFSET;
 
   M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, HEIGHT_UNIT/2, GREEN);
 }
 
 void drawEast(int x, int y) {
   
-  int xCoord = (int) ((x+1)*WIDTH_UNIT - PIPE_WIDTH) + X_OFFSET;
-  int yCoord = (int) (y*HEIGHT_UNIT - PIPE_WIDTH) + Y_OFFSET;
+  int xCoord = (int) ((x)*WIDTH_UNIT + WIDTH_UNIT/2) + X_OFFSET;
+  int yCoord = (int) (y*HEIGHT_UNIT + (HEIGHT_UNIT - PIPE_WIDTH)/2) + Y_OFFSET;
 
   M5.Lcd.fillRect(xCoord, yCoord, WIDTH_UNIT/2, PIPE_WIDTH, GREEN);
 }
 
 void drawSouth(int x, int y) {
   
-  int xCoord = (int) (x*WIDTH_UNIT - PIPE_WIDTH) + X_OFFSET;
-  int yCoord = (int) ((y+1)*HEIGHT_UNIT - PIPE_WIDTH) + Y_OFFSET;
+  int xCoord = (int) (x*WIDTH_UNIT + (WIDTH_UNIT - PIPE_WIDTH)/2) + X_OFFSET;
+  int yCoord = (int) (y*HEIGHT_UNIT) + HEIGHT_UNIT/2 + Y_OFFSET;
 
-  M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, -HEIGHT_UNIT/2, GREEN);
+  M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, HEIGHT_UNIT/2, GREEN);
 }
 
 void drawWest(int x, int y) {
   
-  int xCoord = (int) (x*WIDTH_UNIT - PIPE_WIDTH) + X_OFFSET;
-  int yCoord = (int) (y*HEIGHT_UNIT - PIPE_WIDTH) + Y_OFFSET;
+  int xCoord = (int) (x*WIDTH_UNIT) + X_OFFSET;
+  int yCoord = (int) (y*HEIGHT_UNIT + (HEIGHT_UNIT - PIPE_WIDTH)/2)+ Y_OFFSET;
 
   M5.Lcd.fillRect(xCoord, yCoord, WIDTH_UNIT/2, PIPE_WIDTH, GREEN);
 }
