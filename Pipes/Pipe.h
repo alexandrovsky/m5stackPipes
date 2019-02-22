@@ -33,15 +33,21 @@ struct Pipe{
   }
   
   inline void RotateLeft(){
-    for(int i = 0; i < NUM_CON; i++){
-      connections[(i-1)%NUM_CON] = connections[i];
-    }
+
+    bool lastOld = connections[3];
+    connections[3] = connections[2];
+    connections[2] = connections[1];
+    connections[1] = connections[0];
+    connections[0] = lastOld;
   }
 
   inline void RotateRight(){
-    for(int i = NUM_CON-1; i >= 0 ; i--){
-      connections[i] = connections[(i-1)%NUM_CON];
-    }
+
+    bool lastOld = connections[0];
+    connections[0] = connections[1];
+    connections[1] = connections[2];
+    connections[2] = connections[3];
+    connections[3] = lastOld;
   }
 
 

@@ -17,6 +17,9 @@ long oldTime, curTime;
 
 PipesGameField gameField;
 
+long drawRate = 1000;
+long lastDrawTime;
+
 void setup()
 {
   M5.begin();
@@ -29,12 +32,34 @@ void setup()
   coord.x=1;
   coord.y=1;
 
-  gameField.setPipe(Pipe::PipeCross(), coord);
+  gameField.setPipe(Pipe::PipeT(), coord);
 }
 
 void loop() 
 {
-  Serial.println("test");
+  M5.update();
+
+  // handle input
+
+  //button A pressed
+  if (M5.BtnA.wasPressed()){
+    for(int i = 0; i < GRID_WIDTH; i++){
+      for(int j = 0; j < GRID_HEIGHT; j++){
+        gameField.grid[i][j].RotateLeft();
+      }
+    }
+  }
+
+  if (M5.BtnB.wasPressed()){
+    for(int i = 0; i < GRID_WIDTH; i++){
+      for(int j = 0; j < GRID_HEIGHT; j++){
+        gameField.grid[i][j].RotateRight();
+      }
+    }
+  }
+  
+
+  
   if (IMU.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01) 
   {  
     IMU.readGyroData(IMU.gyroCount);  // Read the x/y/z adc values
@@ -86,7 +111,13 @@ void loop()
     int y=128+20;
     int z=192+30;
     
+    
+  }
+
+  long t = millis();
+  if(t - lastDrawTime >  drawRate){
     draw();
+    lastDrawTime = t;
   }
 }
 
