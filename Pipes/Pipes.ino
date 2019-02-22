@@ -2,13 +2,18 @@
 #include "utility/MPU9250.h"
 #include "Pipe.h"
 
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
+#define RADIUS 5
+#define PIPE_WIDTH 10
+
+float WIDTH_UNIT = (float)(SCREEN_WIDTH)/GRID_WIDTH;
+float HEIGHT_UNIT = (float)(SCREEN_HEIGHT)/GRID_HEIGHT;
+
+
 MPU9250 IMU;
 int xRot, yRot, zRot;
 long oldTime, curTime;
-
-
-int SCREEN_WIDTH = 320;
-int SCREEN_HEIGHT = 240;
 
 PipesGameField gameField;
 
@@ -19,8 +24,6 @@ void setup()
 
   IMU.calibrateMPU9250(IMU.gyroBias, IMU.accelBias);
   IMU.initMPU9250();
-
-  
 }
 
 void loop() 
@@ -97,8 +100,81 @@ void draw()
     int tempY = (int) (y*(float)(SCREEN_HEIGHT)/GRID_HEIGHT);
     M5.Lcd.drawLine(0, tempY, SCREEN_WIDTH, tempY, RED);
   }
+
+  for(int x=0; x < GRID_WIDTH; x++) {
+    for(int y=0; y < GRID_HEIGHT; y++) {
+      drawPipe(x, y);
+    }
+  }
 }
 
 void drawPipe(int x, int y) {
+
+  Pipe p = gameField.getPipe(x, y);
+
+  drawConnection(x,y,p);
+
+  int xCoord = (int) (x*WIDTH_UNIT + WIDTH_UNIT/2 - RADIUS);
+  int yCoord = (int) (y*HEIGHT_UNIT + HEIGHT_UNIT/2 - RADIUS);
+
+  if(p.visited) {
+    M5.Lcd.fillRoundRect(xCoord, yCoord, 2*RADIUS, 2*RADIUS, RADIUS, BLUE);
+  }
+  else {
+    M5.Lcd.fillRoundRect(xCoord, yCoord, 2*RADIUS, 2*RADIUS, RADIUS, RED);
+  }
+}
+
+void drawConnection(int x, int y, Pipe p) {
+
+  for(int dir=0; dir < NUM_CON; dir++) {
+    if(p.connections[dir]) {
+      switch(dir) {
+        case 0:
+          drawNorth(x,y);
+          break;
+        case 1:
+          drawEast(x,y);
+          break;
+        case 2:
+          drawWest(x,y);
+          break;
+        case 3:
+          drawSouth(x,y);
+          break;
+      }
+    }
+  }
+}
+
+void drawNorth(int x, int y) {
   
+  int xCoord = (int) (x*WIDTH_UNIT - PIPE_WIDTH);
+  int yCoord = (int) (y*HEIGHT_UNIT - PIPE_WIDTH);
+
+  M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, WIDTH_UNIT/2, GREEN);
+}
+
+void drawEast(int x, int y) {
+  
+  int xCoord = (int) ((x+1)*WIDTH_UNIT - PIPE_WIDTH);
+  int yCoord = (int) (y*HEIGHT_UNIT - PIPE_WIDTH);
+
+  M5.Lcd.fillRect(xCoord, yCoord, WIDTH_UNIT/2, PIPE_WIDTH, GREEN);
+}
+
+void drawSouth(int x, int y) {
+  
+  int xCoord = (int) (x*WIDTH_UNIT - PIPE_WIDTH);
+  int yCoord = (int) ((y+1)*HEIGHT_UNIT - PIPE_WIDTH);
+
+  M5.Lcd.fillRect(xCoord, yCoord, PIPE_WIDTH, -WIDTH_UNIT/2, GREEN);
+}
+
+void drawWest(int x, int y) {
+  
+  int xCoord = (int) (x*WIDTH_UNIT - PIPE_WIDTH);
+  int yCoord = (int) (y*HEIGHT_UNIT - PIPE_WIDTH);
+
+  M5.Lcd.fillRect(xCoord, yCoord, WIDTH_UNIT/2, PIPE_WIDTH, GREEN);
 }

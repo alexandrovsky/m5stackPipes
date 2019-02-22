@@ -42,12 +42,17 @@ public:
 
 
   Pipe grid [GRID_WIDTH][GRID_HEIGHT];
-  
 
+
+  
   PipesGameField()
   {
     
   }
+
+  Pipe getPipe(int x, int y) {
+
+    return grid[x][y];
+  }
   
 };
-
